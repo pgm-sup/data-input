@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyc.mapper.TableMapper">
+
+    <update id="createTmpTable">
+        CREATE TABLE `${tableName}` (
+        <foreach collection="params" item="column" index="index" separator=",">
+            ${column} varchar(20) DEFAULT NULL
+        </foreach>
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    </update>
+
+</mapper>

@@ -1,0 +1,45 @@
+body,html{
+			padding: 0;
+			margin: 0;
+			margin-top: 50px;
+		}
+		form{
+			text-align: center;
+			height: 32px;	
+
+		}
+
+		
+		.button{
+			border-radius: 100px;
+			margin-right:0;
+			position: absolute;
+		}
+		div.text{
+			margin-top: 50px;
+			font-size: 28px;
+			text-align: center;
+		}
+		
+		.form-inline input{
+			max-width: 120px;
+			padding: 0;
+			border-radius: 0;
+		}
+		input[value='提交']{
+			position:  fixed;
+			bottom: 50px;
+			right: 50px;
+		}
+		input[value='+']{
+			border-radius: 100px;
+			width: 32px;
+			height: 32px;
+		}
+		div.message{
+			position: absolute;
+			background-color: white;
+			padding: 5px;
+			font-size: 20px;
+			display: none;
+		}
