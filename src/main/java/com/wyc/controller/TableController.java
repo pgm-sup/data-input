@@ -1,19 +1,29 @@
 package com.wyc.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wyc.service.TableService;
+import com.wyc.utils.ImportExcelUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author haima
@@ -22,13 +32,16 @@ import java.util.List;
 @RequestMapping("/table")
 public class TableController {
 
+    @Autowired
+    TableService tableService;
+
     @RequestMapping(value = "/index")
     public Object index(){
         ModelAndView mv = new ModelAndView();
         mv.setViewName("hello");
         return mv;
     }
-
+    @ResponseBody
     @RequestMapping(value="/SubmitExcelData",method = RequestMethod.POST)
     public String createTable(HttpServletRequest request) throws IOException {
         // 设置响应和请求编码utf-8
@@ -45,6 +58,14 @@ public class TableController {
             jsonResult.put("msg","失败，传入参数为空");
             return jsonResult.toString();
         }
+        try {
+            tableService.createTable(tableName, headers);
+        }catch (Exception e){
+            jsonResult.put("code", "0");
+            jsonResult.put("msg", "失败，不允许表头有关键字");
+            return jsonResult.toJSONString();
+        }
+
         // 将参数信息存入session中
         HttpSession session = request.getSession();
         try {
@@ -88,34 +109,12 @@ public class TableController {
         HSSFCellStyle style = workbook.createCellStyle();
         // 设置这些样式
         style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
-        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         // 生成一个字体
         HSSFFont font = workbook.createFont();
         font.setColor(HSSFColor.VIOLET.index);
         font.setFontHeightInPoints((short) 12);
-        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         // 把字体应用到当前的样式
         style.setFont(font);
-        // 生成并设置另一个样式
-        HSSFCellStyle style2 = workbook.createCellStyle();
-        style2.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
-        style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-        style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        // 生成另一个字体
-        HSSFFont font2 = workbook.createFont();
-        font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
-        // 把字体应用到当前的样式
-        style2.setFont(font2);
 
 
         // 产生表格标题行
@@ -151,5 +150,25 @@ public class TableController {
         }catch (Exception e) {
             response.getWriter().write("失败，失败原因："+e.getMessage());
         }
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST ,value="/uploadExcel")
+    @ResponseBody
+    public String uploadExcel(MultipartFile myFile){
+
+        String flag ="0";
+        try{
+            InputStream in = myFile.getInputStream();
+            String tableName = myFile.getName();
+            System.out.println(tableName);
+            //这里得到的是一个集合，里面的每一个元素是String[]数组
+            List<Map<String, Object>> list = ImportExcelUtil.parseExcel(in,tableName);
+            //service实现方法
+            System.out.println(tableService.saveData(list, tableName));
+        } catch(Exception e){
+            flag = "1";
+        }
+        return flag;
     }
 }

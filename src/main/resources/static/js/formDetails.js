@@ -1,6 +1,6 @@
 function updataForm(){
 	var json = {};
-    json['tableName'] = "student";
+    json['tableName'] = "mytest";
     json['columns'] = ["id", "name", "sex"];
     $.ajax({
         url: "/table/SubmitExcelData",

@@ -10,4 +10,16 @@
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     </update>
 
+    <insert id="insertData" parameterType="java.util.Map">
+        insert into ${tableName} (
+        <foreach collection="params" index="key" item="value" separator=",">
+            ${key}
+        </foreach>
+        ) VALUES (
+        <foreach collection="params" index="key" item="value" separator=",">
+            #{value}
+        </foreach>
+        )
+    </insert>
+
 </mapper>
