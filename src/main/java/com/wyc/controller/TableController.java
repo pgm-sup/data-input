@@ -41,6 +41,13 @@ public class TableController {
         mv.setViewName("hello");
         return mv;
     }
+
+    @RequestMapping(value = "/upload")
+    public Object upload(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("upload");
+        return mv;
+    }
     @ResponseBody
     @RequestMapping(value="/SubmitExcelData",method = RequestMethod.POST)
     public String createTable(HttpServletRequest request) throws IOException {
@@ -59,10 +66,10 @@ public class TableController {
             return jsonResult.toString();
         }
         try {
-            tableService.createTable(tableName, headers);
+            System.out.println(tableService.createTable(tableName, headers));
         }catch (Exception e){
             jsonResult.put("code", "0");
-            jsonResult.put("msg", "失败，不允许表头有关键字");
+            jsonResult.put("msg", "失败，不允许表头存在关键字");
             return jsonResult.toJSONString();
         }
 
@@ -156,17 +163,17 @@ public class TableController {
     @RequestMapping(method = RequestMethod.POST ,value="/uploadExcel")
     @ResponseBody
     public String uploadExcel(MultipartFile myFile){
-
         String flag ="0";
         try{
             InputStream in = myFile.getInputStream();
-            String tableName = myFile.getName();
-            System.out.println(tableName);
+            String originalFilename = myFile.getOriginalFilename();
+            String tableName = originalFilename.substring(0,originalFilename.indexOf("."));
             //这里得到的是一个集合，里面的每一个元素是String[]数组
-            List<Map<String, Object>> list = ImportExcelUtil.parseExcel(in,tableName);
+            List<Map<String, Object>> list = ImportExcelUtil.parseExcel(in,originalFilename);
             //service实现方法
-            System.out.println(tableService.saveData(list, tableName));
+            tableService.saveData(list, tableName);
         } catch(Exception e){
+            e.printStackTrace();
             flag = "1";
         }
         return flag;

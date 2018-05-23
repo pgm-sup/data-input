@@ -15,7 +15,7 @@ public interface TableService {
      * @param headers 表头
      * @return
      */
-    String createTable(String tableName, List<String> headers);
+    int createTable(String tableName, List<String> headers);
 
     /**
      * 保存数据

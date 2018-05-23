@@ -1,5 +1,6 @@
 package com.wyc.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * @author haima
  */
-@Repository
+@Mapper
 public interface TableMapper {
 
 
@@ -19,7 +20,7 @@ public interface TableMapper {
      * @param params 表字段集合
      * @return 是否创建成功
      */
-    boolean createTmpTable(@Param("tableName") String tableName, @Param("params") List<String> params);
+    int createTmpTable(@Param("tableName") String tableName, @Param("params") List<String> params);
 
     /**
      * 插入数据

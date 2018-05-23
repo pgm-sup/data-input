@@ -3,9 +3,9 @@
 <mapper namespace="com.wyc.mapper.TableMapper">
 
     <update id="createTmpTable">
-        CREATE TABLE `${tableName}` (
+        CREATE TABLE IF NOT EXISTS `${tableName}` (
         <foreach collection="params" item="column" index="index" separator=",">
-            ${column} varchar(20) DEFAULT NULL
+            ${column} varchar(255) DEFAULT NULL
         </foreach>
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     </update>

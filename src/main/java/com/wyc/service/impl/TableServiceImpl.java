@@ -18,9 +18,8 @@ public class TableServiceImpl implements TableService {
     TableMapper tableMapper;
 
     @Override
-    public String createTable(String tableName, List<String> headers) {
-        tableMapper.createTmpTable(tableName, headers);
-        return null;
+    public int createTable(String tableName, List<String> headers) {
+        return tableMapper.createTmpTable(tableName, headers);
     }
 
     @Override
