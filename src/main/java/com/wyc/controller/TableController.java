@@ -3,7 +3,7 @@ package com.wyc.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wyc.service.TableService;
 import com.wyc.utils.ImportExcelUtil;
-import org.apache.commons.io.FileUtils;
+
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
